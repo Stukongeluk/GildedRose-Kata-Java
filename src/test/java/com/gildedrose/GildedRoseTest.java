@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GildedRoseTest {
 
     @Test
-    void given_normalItemWith0SellIn_when_qualityIsUpdated_then_decreaseSellIn() {
+    void given_normalItemWithSellIn0_when_qualityIsUpdated_then_decreaseSellIn() {
         Item[] items = new Item[] { new Item("foo", 0, 0) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -18,7 +18,7 @@ class GildedRoseTest {
     }
 
     @Test
-    void given_normalItemWith0Quality_when_qualityIsUpdated_then_doNothing() {
+    void given_normalItemWithQuality0_when_qualityIsUpdated_then_doNothing() {
         Item[] items = new Item[] { new Item("foo", 0, 0) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -26,7 +26,7 @@ class GildedRoseTest {
     }
 
     @Test
-    void given_normalItemWith50qualityAnd1SellIn_when_qualityIsUpdated_then_decreaseQuality() {
+    void given_normalItemWithQuality50AndSellIn1_when_qualityIsUpdated_then_decreaseQuality() {
         Item[] items = new Item[] { new Item("foo", 1, 50) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -34,7 +34,7 @@ class GildedRoseTest {
     }
 
     @Test
-    void given_normalItemWith0SellInAnd4Quality_when_qualityIsUpdated_then_decreaseQualityBy2() {
+    void given_normalItemWithSellIn0AndQuality4_when_qualityIsUpdated_then_decreaseQualityBy2() {
         Item[] items = new Item[] { new Item("foo", 0, 4) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -104,7 +104,7 @@ class GildedRoseTest {
     // Sulfuras
 
     @Test
-    void given_SulfurasItemWith50Quality_when_qualityIsUpdated_then_qualityStays50() {
+    void given_sulfurasItemWithQuality50_when_qualityIsUpdated_then_qualityStays50() {
         Item[] items = new Item[] { new Item("Sulfuras, Hand of Ragnaros", 0, 50) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -112,10 +112,28 @@ class GildedRoseTest {
     }
 
     @Test
-    void given_SulfurasItemWith5SellIn_when_qualityIsUpdated_then_SellInStays5() {
+    void given_sulfurasItemWithSellIn5_when_qualityIsUpdated_then_SellInStays5() {
         Item[] items = new Item[] { new Item("Sulfuras, Hand of Ragnaros", 5, 0) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(5, app.items[0].sellIn);
+    }
+
+    // Conjured
+
+    @Test
+    void given_conjuredItemWithQuality4_when_qualityIsUpdated_then_decreaseQualityBy2() {
+        Item[] items = new Item[] { new Item("Conjured Mana Cake", 5, 4) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(2, app.items[0].quality);
+    }
+
+    @Test
+    void given_conjuredItemWithNegativeSellIn_when_qualityIsUpdated_then_decreaseQualityBy4() {
+        Item[] items = new Item[] { new Item("Conjured Mana Cake", -4, 4) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(0, app.items[0].quality);
     }
 }
