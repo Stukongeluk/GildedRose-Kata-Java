@@ -1,6 +1,14 @@
 package com.gildedrose;
 
 class GildedRose {
+    public static final String AGED_BRIE = "Aged Brie";
+    public static final String BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
+    public static final String SULFURAS = "Sulfuras, Hand of Ragnaros";
+
+    public static final int BACKSTAGE_SELL_IN_10_DAYS_THRESHOLD = 10;
+    public static final int BACKSTAGE_SELL_IN_5_DAYS_THRESHOLD = 5;
+    public static final int BACKSTAGE_CONCERT_PASSED_SELL_IN_THRESHOLD = 0;
+
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -14,56 +22,59 @@ class GildedRose {
     }
 
     private void updateItemQualiy(Item item) {
-        if (!item.name.equals("Aged Brie") // Aged Brie is different from normal items
-            && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) { // Backstage passes also different from normal items
-            if (item.quality > 0) {
-                if (!item.name.equals("Sulfuras, Hand of Ragnaros")) { // Sulfuras is different from normal items
-                    decreaseQuality(item); // Sulfuras doesn't lose quality
-                }
-            }
-        } else {
-            increaseQuality(item); // Only Aged Brie gains quality with each passing day
-            if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) { // Different logic for backstage passes
-                if (item.sellIn < 11) { // Quality should increase by 2
-                    increaseQuality(item);
-                }
+        int qualityIncrease = 1;
+        int qualityDecrease = 1;
 
-                if (item.sellIn < 6) { // Quality should increase by 3
-                    increaseQuality(item);
+        switch (item.name) {
+            case AGED_BRIE:
+                decreaseSellIn(item);
+                increaseQuality(item, qualityIncrease);
+                break;
+            case BACKSTAGE_PASSES:
+                decreaseSellIn(item);
+                if (item.sellIn < BACKSTAGE_CONCERT_PASSED_SELL_IN_THRESHOLD) {
+                    decreaseQuality(item, item.quality);
+                    break;
+                } else if (item.sellIn <= BACKSTAGE_SELL_IN_5_DAYS_THRESHOLD) {
+                    qualityIncrease = 3;
+                } else if (item.sellIn <= BACKSTAGE_SELL_IN_10_DAYS_THRESHOLD) {
+                    qualityIncrease = 2;
                 }
-            }
-        }
-
-        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) { // SellIn doesn't change for Sulfuras
-            item.sellIn = item.sellIn - 1;
-        }
-
-        if (item.sellIn < 0) {
-            if (!item.name.equals("Aged Brie")) {
-                if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                    if (item.quality > 0) {
-                        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                            item.quality = item.quality - 1; // Sulfuras doesn't lose quality
-                        }
-                    }
-                } else {
-                    item.quality = 0; // Backstage pass loses all quality when sellin date < 0
+                increaseQuality(item, qualityIncrease);
+                break;
+            case SULFURAS:
+                break;
+            default:
+                decreaseSellIn(item);
+                if (item.sellIn < 0) {
+                    qualityDecrease = 2;
                 }
-            } else {
-                increaseQuality(item);
-            }
+                decreaseQuality(item, qualityDecrease);
+                break;
         }
     }
 
-    private void increaseQuality(Item item) {
-        if (item.quality < 50) {
-            item.quality = item.quality + 1;
+    private void decreaseSellIn(Item item) {
+        item.sellIn -= 1;
+    }
+
+    private void increaseQuality(Item item, int amount) {
+        int maxQuality = 50;
+        if (item.quality < maxQuality) {
+            item.quality = item.quality + amount;
+        }
+        if (item.quality > maxQuality) { // Quality should never be more than 50, fix this in a better way later
+            item.quality = 50;
         }
     }
 
-    private void decreaseQuality(Item item) {
-        if (item.quality > 0) {
-            item.quality = item.quality - 1;
+    private void decreaseQuality(Item item, int amount) {
+        int minimumQuality = 0;
+        if (item.quality > minimumQuality) {
+            item.quality = item.quality - amount;
+        }
+        if (item.quality < minimumQuality) { // Quality should never be negative
+            item.quality = minimumQuality;
         }
     }
 }

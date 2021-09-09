@@ -41,6 +41,14 @@ class GildedRoseTest {
         assertEquals(2, app.items[0].quality);
     }
 
+    @Test
+    void given_normalItemWithNegativeQuality_when_qualityIsUpdated_then_setQualityTo0() {
+        Item[] items = new Item[] { new Item("foo", 1, -3) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(0, app.items[0].quality);
+    }
+
     // Brie
 
     @Test
@@ -78,11 +86,19 @@ class GildedRoseTest {
     }
 
     @Test
-    void given_backstagePassesFromTAFKAL80ETCWith0SellInAndQuality50_when_qualityIsUpdated_then_qualityIs0() {
+    void given_backstagePassesFromTAFKAL80ETCWithSellIn0AndQuality50_when_qualityIsUpdated_then_qualityDropsTo0() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 0, 50) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(0, app.items[0].quality);
+    }
+
+    @Test
+    void given_backstagePassesWithQualityOf49_when_qualityIsUpdated_then_increaseQualityBy3ToMax50() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 1, 49) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(50, app.items[0].quality);
     }
 
     // Sulfuras
