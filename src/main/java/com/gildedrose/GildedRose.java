@@ -8,45 +8,49 @@ class GildedRose {
     }
 
     public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-            if (!items[i].name.equals("Aged Brie") // Aged Brie is different from normal items
-                    && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) { // Backstage passes also different from normal items
-                if (items[i].quality > 0) {
-                    if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) { // Sulfuras is different from normal items
-                        decreaseQuality(items[i]); // Sulfuras doesn't lose quality
-                    }
-                }
-            } else {
-                increaseQuality(items[i]); // Only Aged Brie gains quality with each passing day
-                if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) { // Different logic for backstage passes
-                    if (items[i].sellIn < 11) { // Quality should increase by 2
-                        increaseQuality(items[i]);
-                    }
+        for (Item item:this.items) {
+            updateItemQualiy(item);
+        }
+    }
 
-                    if (items[i].sellIn < 6) { // Quality should increase by 3
-                        increaseQuality(items[i]);
-                    }
+    private void updateItemQualiy(Item item) {
+        if (!item.name.equals("Aged Brie") // Aged Brie is different from normal items
+            && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) { // Backstage passes also different from normal items
+            if (item.quality > 0) {
+                if (!item.name.equals("Sulfuras, Hand of Ragnaros")) { // Sulfuras is different from normal items
+                    decreaseQuality(item); // Sulfuras doesn't lose quality
                 }
             }
+        } else {
+            increaseQuality(item); // Only Aged Brie gains quality with each passing day
+            if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) { // Different logic for backstage passes
+                if (item.sellIn < 11) { // Quality should increase by 2
+                    increaseQuality(item);
+                }
 
-            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) { // SellIn doesn't change for Sulfuras
-                items[i].sellIn = items[i].sellIn - 1;
+                if (item.sellIn < 6) { // Quality should increase by 3
+                    increaseQuality(item);
+                }
             }
+        }
 
-            if (items[i].sellIn < 0) {
-                if (!items[i].name.equals("Aged Brie")) {
-                    if (!items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].quality > 0) {
-                            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                                items[i].quality = items[i].quality - 1; // Sulfuras doesn't lose quality
-                            }
+        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) { // SellIn doesn't change for Sulfuras
+            item.sellIn = item.sellIn - 1;
+        }
+
+        if (item.sellIn < 0) {
+            if (!item.name.equals("Aged Brie")) {
+                if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                    if (item.quality > 0) {
+                        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+                            item.quality = item.quality - 1; // Sulfuras doesn't lose quality
                         }
-                    } else {
-                        items[i].quality = 0; // Backstage pass loses all quality when sellin date < 0
                     }
                 } else {
-                    increaseQuality(items[i]);
+                    item.quality = 0; // Backstage pass loses all quality when sellin date < 0
                 }
+            } else {
+                increaseQuality(item);
             }
         }
     }
