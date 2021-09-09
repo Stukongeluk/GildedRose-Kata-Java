@@ -68,9 +68,16 @@ class GildedRoseTest {
     }
 
     // Backstage
+    @Test
+    void given_backstagePassesWithSellInAbove10_when_qualityIsUpdated_then_increaseQualityBy1() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 20, 0) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(1, app.items[0].quality);
+    }
 
     @Test
-    void given_backstagePassesFromTAFKAL80ETCWithSellIn10_when_qualityIsUpdated_then_increaseQualityBy2() {
+    void given_backstagePassesWithSellIn10_when_qualityIsUpdated_then_increaseQualityBy2() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 10, 0) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -78,7 +85,7 @@ class GildedRoseTest {
     }
 
     @Test
-    void given_backstagePassesFromTAFKAL80ETCWithSellIn2_when_qualityIsUpdated_then_increaseQualityBy3() {
+    void given_backstagePassesWithSellIn2_when_qualityIsUpdated_then_increaseQualityBy3() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 2, 0) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -86,7 +93,7 @@ class GildedRoseTest {
     }
 
     @Test
-    void given_backstagePassesFromTAFKAL80ETCWithSellIn0AndQuality50_when_qualityIsUpdated_then_qualityDropsTo0() {
+    void given_backstagePassesWithSellIn0AndQuality50_when_qualityIsUpdated_then_qualityDropsTo0() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 0, 50) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -104,16 +111,16 @@ class GildedRoseTest {
     // Sulfuras
 
     @Test
-    void given_sulfurasItemWithQuality50_when_qualityIsUpdated_then_qualityStays50() {
-        Item[] items = new Item[] { new Item("Sulfuras, Hand of Ragnaros", 0, 50) };
+    void given_sulfurasItemWithQuality50_when_qualityIsUpdated_then_qualityStays80() {
+        Item[] items = new Item[] { new Item("Sulfuras, Hand of Ragnaros", 0, 80) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
-        assertEquals(50, app.items[0].quality);
+        assertEquals(80, app.items[0].quality);
     }
 
     @Test
     void given_sulfurasItemWithSellIn5_when_qualityIsUpdated_then_SellInStays5() {
-        Item[] items = new Item[] { new Item("Sulfuras, Hand of Ragnaros", 5, 0) };
+        Item[] items = new Item[] { new Item("Sulfuras, Hand of Ragnaros", 5, 80) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(5, app.items[0].sellIn);
